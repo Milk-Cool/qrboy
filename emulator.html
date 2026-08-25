@@ -1,9 +1,22 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <canvas
     style="position: fixed; top: 50vh; left: 50vw; translate: -50% -50%; width: min(100vw, 100vh)"
     width="64" height="64"
 ></canvas>
+<table>
+    <tr><td><button id="b">🅑</button></td><td><button id="u">⮙</button></td></tr>
+    <tr><td><button id="l">⮘</button></td><td><button id="a">🅐</button></td><td><button id="r">⮚</button></td></tr>
+    <tr><td></td><td><button id="d">⮛</button></td></tr>
+</tr>
+</table>
 <script>
-    let game = new Uint8Array("$PAD");
-    game.set(new Uint8Array(atob("$BASE64").split("").map(x => x.codePointAt(0))));
-    console.log(game);
+    let q = x => document.querySelector(x);
+    let g = new Uint8Array("$PAD");
+    g.set(new Uint8Array(atob("$BASE64").split("").map(x => x.codePointAt(0))));
+    let r = new Uint8Array(8);
+    let c = q("canvas").getContext("2d");
+    q("table").setAttribute("style", "position:fixed;bottom:1em;right:1em");
+    let b = [q("#a"), q("#b"), q("#l"), q("#r"), q("#u"), q("#d")];
+    b.forEach(x => x.style.fontSize = "200%");
 </script>
