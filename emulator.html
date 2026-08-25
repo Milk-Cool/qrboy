@@ -32,7 +32,7 @@
         B.background = S ? W : L;
         x = g[i], y = g[i + 1];
         V = (y >> 3) & 7;
-        W = x & 248;
+        U = x & 248;
         M = ((x & 7) << 8) | y;
         N = r[x & 7];
         O = r[y & 7];
@@ -43,22 +43,22 @@
             z.fill();
         } if(x == 17)
             i = s.pop();
-        if(W == 128)
+        if(U == 128)
             i = M - 2;
-        if(W == 136) {
+        if(U == 136) {
             s.push(i);
             i = M;
-        } if(W == 144 && N == y)
+        } if(U == 144 && N == y)
             i += 2;
-        if(W == 152 && N != y)
+        if(U == 152 && N != y)
             i += 2;
         if(x == 64 && P == O)
             i += 2;
         if(x == 65 && P != O)
             i += 2;
-        if(W == 160)
+        if(U == 160)
             r[x & 7] = y;
-        if(W == 168) {
+        if(U == 168) {
             r[x & 7] = a = N + y;
             r[7] = a < 0;
         } if(x == 66) {
@@ -84,11 +84,11 @@
         } if(x == 74) {
             r[V] = O << 1;
             r[7] = O >> 7;
-        } if(W == 176)
+        } if(U == 176)
             p = M;
-        if(W == 184)
+        if(U == 184)
             p = M + r[0];
-        if(W == 192)
+        if(U == 192)
             r[x & 7] = Math.floor(Math.random() * 256) & y;
         if((x & 240) == 240) {
             let o = false;
