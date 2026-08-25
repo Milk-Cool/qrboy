@@ -28,7 +28,7 @@ Most of these are taken from CHIP-8
 |10110||Set P to address|11|
 |10111||Set P to address plus R0|11|
 |11000||Set register to random byte AND specified byte|3+8=11|
-|1111||Draw 8 by number sprite, loaded from P, at X = register Y = another register|3+3+6=12|
+|1111||Draw 8 by number plus 1 sprite, loaded from P, at X = register Y = another register|3+3+6=12|
 |00100000XXXXX||Skip opcode if button from register is pressed|3|
 |00100001XXXXX||Skip opcode if button from register is not pressed|3|
 |00100010XXXXX||Skip opcode if button from value is pressed|3|
@@ -36,7 +36,7 @@ Most of these are taken from CHIP-8
 |00100100XXXXX||Block execution until button is pressed, then store button number to register|3|
 |00100101XXXXX||Set register to value of the delay timer|3|
 |00100110XXXXX||Set value of the delay timer to register|3|
-|00100111XXXXX||Set value of the sound timer to register, sound is played until it reaches 0|3|
+|00100111XXXXX||Set value of the sound timer to register, background is white until it reaches 0|3|
 |00101000XXXXX||Add register value to P|3|
 |00101001XXXXX||Store value in register to P, P+1 and P+2 as hundreds, tens and ones respectively|3|
 |00101010XXXXX||Store values from R0-RX to memory from P and add X+1 to P|3|

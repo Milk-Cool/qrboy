@@ -28,6 +28,11 @@ const { positionals, values } = parseArgs({
             type: "boolean",
             short: "u",
             default: false
+        },
+        hex: {
+            type: "boolean",
+            short: "h",
+            default: false
         }
     }
 });
@@ -37,7 +42,9 @@ if(positionals.length === 0) {
     process.exit(1);
 }
 const binary = fs.readFileSync(positionals[0]);
-const base64 = binary.toString("base64").replaceAll("=", "");
+const base64 = (values.hex
+    ? Buffer.from(binary.toString("ascii").replace(/\s+/g, ""), "hex")
+    : binary).toString("base64").replaceAll("=", "");
 
 if(!values.pad.match(/^\d+$/)) {
     console.error("--pad seems to be invalid, exiting!");
@@ -53,10 +60,11 @@ const url = "data:text/html," + minify(emulator, {
     collapseWhitespace: true
 }).replaceAll("%", "%25").replaceAll("#", "%23") + (values.ln ? "\n" : "");
 
+const qrOpts: QRCode.QRCodeOptions = { errorCorrectionLevel: "L" };
 if(values.url) {
     if(values.output === "-") process.stdout.write(url);
     else fs.writeFileSync(values.output, url);
 } else {
-    if(values.output === "-") process.stdout.write(await QRCode.toBuffer(url));
-    else fs.writeFileSync(values.output, await QRCode.toBuffer(url));
+    if(values.output === "-") process.stdout.write(await QRCode.toBuffer(url, qrOpts));
+    else fs.writeFileSync(values.output, await QRCode.toBuffer(url, qrOpts));
 }

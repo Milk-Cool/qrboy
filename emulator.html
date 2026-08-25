@@ -1,7 +1,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <canvas
-    style="position: fixed; top: 50vh; left: 50vw; translate: -50% -50%; width: min(100vw, 100vh)"
+    style="position: fixed; top: 50vh; left: 50vw; translate: -50% -50%; width: min(100vw, 100vh); image-rendering: pixelated"
     width="64" height="64"
 ></canvas>
 <table>
@@ -11,12 +11,135 @@
 </tr>
 </table>
 <script>
-    let q = x => document.querySelector(x);
-    let g = new Uint8Array("$PAD");
-    g.set(new Uint8Array(atob("$BASE64").split("").map(x => x.codePointAt(0))));
-    let r = new Uint8Array(8);
-    let c = q("canvas").getContext("2d");
-    q("table").setAttribute("style", "position:fixed;bottom:1em;right:1em");
-    let b = [q("#a"), q("#b"), q("#l"), q("#r"), q("#u"), q("#d")];
+    let q = x => document.querySelector(x),
+        g = new Uint8Array("$PAD"),
+        r = new Uint8Array(8),
+        c = q("canvas").getContext("2d"),
+        W = "white", L = "black",
+        b = [q("#a"), q("#b"), q("#l"), q("#r"), q("#u"), q("#d")], K = 0,
+        B = q("body").style,
+        s = [], p = 0, i = 0, t = 0, S = 0, a,
+        z = new Array(64).fill(0).map(_ => new Array(64).fill(false)), X, Y,
+        M, N, O, P, x, y;
     b.forEach(x => x.style.fontSize = "200%");
+    c.fillStyle = W;
+    c.fillRect(0, 0, 128, 128);
+    q("table").setAttribute("style", "position:fixed;bottom:1em;right:1em");
+    g.set(new Uint8Array(atob("$BASE64").split("").map(x => x.codePointAt(0))));
+    console.log(g);
+    b.forEach((e, i) => {
+        e.onpointerdown = _ => K |= 1 << i;
+        e.onpointerup = _ => K &= ~(1 << i);
+    });
+    setInterval(_ => {
+        B.background = S ? W : L;
+        x = g[i], y = g[i + 1];
+        M = ((x & 7) << 8) | y;
+        N = r[x & 7];
+        O = r[y & 7];
+        P = r[(y >> 3) & 7];
+        if(x == 16) {
+            c.fillStyle = W;
+            c.fillRect(0, 0, 128, 128);
+        } else if(x == 17)
+            i = s.pop();
+        else if((x & 248) == 128)
+            i = M - 2;
+        else if((x & 248) == 136) {
+            s.push(i);
+            i = M;
+        } else if((x & 248) == 144 && N == y)
+            i += 2;
+        else if((x & 248) == 152 && N != y)
+            i += 2;
+        else if(x == 64 && P == O)
+            i += 2;
+        else if(x == 65 && P != O)
+            i += 2;
+        else if((x & 248) == 160)
+            r[x & 7] = y;
+        else if((x & 248) == 168) {
+            r[x & 7] = a = N + y;
+            r[7] = a < 0 ? 1 : 0;
+        } else if(x == 66) {
+            r[(y >> 3) & 7] = a = P + O;
+            r[7] = a > 255 ? 1 : 0;
+        } else if(x == 67) {
+            r[(y >> 3) & 7] = a = P - O;
+            r[7] = a < 0 ? 1 : 0;
+        } else if(x == 68) {
+            r[(y >> 3) & 7] = a = O - P;
+            r[7] = a < 0 ? 1 : 0;
+        } else if(x == 69)
+            r[(y >> 3) & 7] = O;
+        else if(x == 70)
+            r[(y >> 3) & 7] = P | O;
+        else if(x == 71)
+            r[(y >> 3) & 7] = P & O;
+        else if(x == 72)
+            r[(y >> 3) & 7] = P ^ O;
+        else if(x == 73) {
+            r[(y >> 3) & 7] = O >> 1;
+            r[7] = [y & 7] & 1;
+        } else if(x == 74) {
+            r[(y >> 3) & 7] = O << 1;
+            r[7] = O >> 7;
+        } else if((x & 248) == 176)
+            p = M;
+        else if((x & 248) == 184)
+            p = M + r[0];
+        else if((x & 248) == 192)
+            r[x & 7] = Math.floor(Math.random() * 256) & y;
+        else if((x & 240) == 240) {
+            let o = false;
+            for(let j = 0; j < (y & 63) + 1; j++)
+                for(let k = 0; k < 8; k++) {
+                    a = !!((g[p + j] >> k) & 1);
+                    c.fillStyle = a ? L : W;
+                    X = r[(x & 15) >> 1] + k;
+                    Y = r[((x & 1) << 2) | ((y & 192) >> 6)] + j;
+                    console.log(X, Y, a);
+                    c.fillRect(X, Y, 1, 1);
+                    if(X < 64 && Y < 64) {
+                        o ||= z[X][Y] != a;
+                        z[X][Y] = a;
+                    }
+                }
+            r[7] = o ? 1 : 0;
+        } else if(x == 32 && (K >> O) & 1)
+            i += 2;
+        else if(x == 33 && !((K >> O) & 1))
+            i += 2;
+        else if(x == 34 && (K >> y) & 1)
+            i += 2;
+        else if(x == 35 && !((K >> y) & 1))
+            i += 2;
+        else if(x == 36) {
+            if(K == 0) i -= 2;
+            else r[y & 7] = Math.log2(K);
+        } else if(x == 37)
+            r[y & 7] = t;
+        else if(x == 38)
+            t = O;
+        else if(x == 39)
+            S = O;
+        else if(x == 40)
+            p += O;
+        else if(x == 41) {
+            g[p] = O / 100;
+            g[p + 1] = (O / 10) % 10;
+            g[p + 2] = O % 10;
+        } else if(x == 42) {
+            for(let j = 0; j <= y & 7; j++)
+                g[p++] = r[j];
+        } else if(x == 43) {
+            for(let j = 0; j <= y & 7; j++)
+                r[j] = g[p++];
+        }
+        i += 2;
+    }, 10);
+    setInterval(_ => {
+        if(t > 0) t--;
+        if(S > 0) S--;
+    }, 50);
 </script>
