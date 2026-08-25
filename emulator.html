@@ -41,56 +41,56 @@
         if(x == 16) {
             c.fillStyle = W;
             c.fillRect(0, 0, 128, 128);
-        } else if(x == 17)
+        } if(x == 17)
             i = s.pop();
-        else if((x & 248) == 128)
+        if((x & 248) == 128)
             i = M - 2;
-        else if((x & 248) == 136) {
+        if((x & 248) == 136) {
             s.push(i);
             i = M;
-        } else if((x & 248) == 144 && N == y)
+        } if((x & 248) == 144 && N == y)
             i += 2;
-        else if((x & 248) == 152 && N != y)
+        if((x & 248) == 152 && N != y)
             i += 2;
-        else if(x == 64 && P == O)
+        if(x == 64 && P == O)
             i += 2;
-        else if(x == 65 && P != O)
+        if(x == 65 && P != O)
             i += 2;
-        else if((x & 248) == 160)
+        if((x & 248) == 160)
             r[x & 7] = y;
-        else if((x & 248) == 168) {
+        if((x & 248) == 168) {
             r[x & 7] = a = N + y;
             r[7] = a < 0 ? 1 : 0;
-        } else if(x == 66) {
+        } if(x == 66) {
             r[(y >> 3) & 7] = a = P + O;
             r[7] = a > 255 ? 1 : 0;
-        } else if(x == 67) {
+        } if(x == 67) {
             r[(y >> 3) & 7] = a = P - O;
             r[7] = a < 0 ? 1 : 0;
-        } else if(x == 68) {
+        } if(x == 68) {
             r[(y >> 3) & 7] = a = O - P;
             r[7] = a < 0 ? 1 : 0;
-        } else if(x == 69)
+        } if(x == 69)
             r[(y >> 3) & 7] = O;
-        else if(x == 70)
+        if(x == 70)
             r[(y >> 3) & 7] = P | O;
-        else if(x == 71)
+        if(x == 71)
             r[(y >> 3) & 7] = P & O;
-        else if(x == 72)
+        if(x == 72)
             r[(y >> 3) & 7] = P ^ O;
-        else if(x == 73) {
+        if(x == 73) {
             r[(y >> 3) & 7] = O >> 1;
             r[7] = [y & 7] & 1;
-        } else if(x == 74) {
+        } if(x == 74) {
             r[(y >> 3) & 7] = O << 1;
             r[7] = O >> 7;
-        } else if((x & 248) == 176)
+        } if((x & 248) == 176)
             p = M;
-        else if((x & 248) == 184)
+        if((x & 248) == 184)
             p = M + r[0];
-        else if((x & 248) == 192)
+        if((x & 248) == 192)
             r[x & 7] = Math.floor(Math.random() * 256) & y;
-        else if((x & 240) == 240) {
+        if((x & 240) == 240) {
             let o = false;
             for(let j = 0; j < (y & 63) + 1; j++)
                 for(let k = 0; k < 8; k++) {
@@ -106,33 +106,33 @@
                     }
                 }
             r[7] = o ? 1 : 0;
-        } else if(x == 32 && (K >> O) & 1)
+        } if(x == 32 && (K >> O) & 1)
             i += 2;
-        else if(x == 33 && !((K >> O) & 1))
+        if(x == 33 && !((K >> O) & 1))
             i += 2;
-        else if(x == 34 && (K >> y) & 1)
+        if(x == 34 && (K >> y) & 1)
             i += 2;
-        else if(x == 35 && !((K >> y) & 1))
+        if(x == 35 && !((K >> y) & 1))
             i += 2;
-        else if(x == 36) {
+        if(x == 36) {
             if(K == 0) i -= 2;
             else r[y & 7] = Math.log2(K);
-        } else if(x == 37)
+        } if(x == 37)
             r[y & 7] = t;
-        else if(x == 38)
+        if(x == 38)
             t = O;
-        else if(x == 39)
+        if(x == 39)
             S = O;
-        else if(x == 40)
+        if(x == 40)
             p += O;
-        else if(x == 41) {
+        if(x == 41) {
             g[p] = O / 100;
             g[p + 1] = (O / 10) % 10;
             g[p + 2] = O % 10;
-        } else if(x == 42) {
+        } if(x == 42) {
             for(let j = 0; j <= y & 7; j++)
                 g[p++] = r[j];
-        } else if(x == 43) {
+        } if(x == 43) {
             for(let j = 0; j <= y & 7; j++)
                 r[j] = g[p++];
         }
