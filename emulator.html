@@ -31,62 +31,64 @@
     setInterval(_ => {
         B.background = S ? W : L;
         x = g[i], y = g[i + 1];
+        V = (y >> 3) & 7;
+        W = x & 248;
         M = ((x & 7) << 8) | y;
         N = r[x & 7];
         O = r[y & 7];
-        P = r[(y >> 3) & 7];
+        P = r[V];
         if(x == 16) {
             c.fillStyle = W;
             c.fillRect(0, 0, 128, 128);
             z.fill();
         } if(x == 17)
             i = s.pop();
-        if((x & 248) == 128)
+        if(W == 128)
             i = M - 2;
-        if((x & 248) == 136) {
+        if(W == 136) {
             s.push(i);
             i = M;
-        } if((x & 248) == 144 && N == y)
+        } if(W == 144 && N == y)
             i += 2;
-        if((x & 248) == 152 && N != y)
+        if(W == 152 && N != y)
             i += 2;
         if(x == 64 && P == O)
             i += 2;
         if(x == 65 && P != O)
             i += 2;
-        if((x & 248) == 160)
+        if(W == 160)
             r[x & 7] = y;
-        if((x & 248) == 168) {
+        if(W == 168) {
             r[x & 7] = a = N + y;
             r[7] = a < 0;
         } if(x == 66) {
-            r[(y >> 3) & 7] = a = P + O;
+            r[V] = a = P + O;
             r[7] = a > 255;
         } if(x == 67) {
-            r[(y >> 3) & 7] = a = P - O;
+            r[V] = a = P - O;
             r[7] = a < 0;
         } if(x == 68) {
-            r[(y >> 3) & 7] = a = O - P;
+            r[V] = a = O - P;
             r[7] = a < 0;
         } if(x == 69)
-            r[(y >> 3) & 7] = O;
+            r[V] = O;
         if(x == 70)
-            r[(y >> 3) & 7] = P | O;
+            r[V] = P | O;
         if(x == 71)
-            r[(y >> 3) & 7] = P & O;
+            r[V] = P & O;
         if(x == 72)
-            r[(y >> 3) & 7] = P ^ O;
+            r[V] = P ^ O;
         if(x == 73) {
-            r[(y >> 3) & 7] = O >> 1;
+            r[V] = O >> 1;
             r[7] = [y & 7] & 1;
         } if(x == 74) {
-            r[(y >> 3) & 7] = O << 1;
+            r[V] = O << 1;
             r[7] = O >> 7;
-        } if((x & 248) == 176)
+        } if(W == 176)
             p = M;
-        if((x & 248) == 184)
+        if(W == 184)
             p = M + r[0];
-        if((x & 248) == 192)
+        if(W == 192)
             r[x & 7] = Math.floor(Math.random() * 256) & y;
         if((x & 240) == 240) {
             let o = false;
