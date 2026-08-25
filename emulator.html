@@ -17,15 +17,14 @@
         W = "#fff", L = "#000",
         b = [G, D, F, H, E, I],
         B = document.body.style,
-        s = [], p = i = t = S = K = 0, a,
-        Z = _ => new Array(64).fill(0).map(_ => new Array(64).fill(false)),
-        z = Z(), X, Y,
-        M, N, O, P, Q, x, y;
-    b.forEach(x => x.style.fontSize = "200%");
+        s = [], p = i = t = S = K = 0,
+        Z = _ => Array(64).fill().map(_ => Array(64).fill(false)),
+        z = Z();
+    for(x of b) x.style.fontSize = "200%";
     c.fillStyle = W;
     c.fillRect(0, 0, 128, 128);
     J.setAttribute("style", "position:fixed;bottom:1em;right:1em");
-    g.set(new Uint8Array(atob("$BASE64").split("").map(x => x.codePointAt(0))));
+    g.set(Uint8Array.from(atob("$BASE64"), x => x.charCodeAt()));
     b.forEach((e, i) => {
         e.onpointerdown = _ => K |= 1 << i;
         e.onpointerup = _ => K &= ~(1 << i);
