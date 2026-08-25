@@ -1,23 +1,22 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<canvas
+<canvas id="C"
     style="position: fixed; top: 50vh; left: 50vw; translate: -50% -50%; width: min(100vw, 100vh); image-rendering: pixelated"
     width="64" height="64"
 ></canvas>
-<table>
-    <tr><td><button id="b">🅑</button></td><td><button id="u">⬆</button></td></tr>
-    <tr><td><button id="l">⬅</button></td><td><button id="a">🅐</button></td><td><button id="r">➡</button></td></tr>
-    <tr><td></td><td><button id="d">⬇</button></td></tr>
+<table id="J">
+    <tr><td><button id="D">🅑</button></td><td><button id="E">⬆</button></td></tr>
+    <tr><td><button id="F">⬅</button></td><td><button id="G">🅐</button></td><td><button id="H">➡</button></td></tr>
+    <tr><td></td><td><button id="I">⬇</button></td></tr>
 </tr>
 </table>
 <script>
-    let q = x => document.querySelector(x),
-        g = new Uint8Array("$PAD"),
+    let g = new Uint8Array("$PAD"),
         r = new Uint8Array(8),
-        c = q("canvas").getContext("2d"),
+        c = C.getContext("2d"),
         W = "white", L = "black",
-        b = [q("#a"), q("#b"), q("#l"), q("#r"), q("#u"), q("#d")], K = 0,
-        B = q("body").style,
+        b = [G, D, F, H, E, I], K = 0,
+        B = document.body.style,
         s = [], p = 0, i = 0, t = 0, S = 0, a,
         Z = _ => new Array(64).fill(0).map(_ => new Array(64).fill(false)),
         z = Z(), X, Y,
@@ -25,7 +24,7 @@
     b.forEach(x => x.style.fontSize = "200%");
     c.fillStyle = W;
     c.fillRect(0, 0, 128, 128);
-    q("table").setAttribute("style", "position:fixed;bottom:1em;right:1em");
+    J.setAttribute("style", "position:fixed;bottom:1em;right:1em");
     g.set(new Uint8Array(atob("$BASE64").split("").map(x => x.codePointAt(0))));
     b.forEach((e, i) => {
         e.onpointerdown = _ => K |= 1 << i;
