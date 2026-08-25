@@ -97,8 +97,8 @@
                     X = r[(x & 15) >> 1] + k;
                     Y = r[((x & 1) << 2) | ((y & 192) >> 6)] + j;
                     if(X > 63 || Y > 63) continue;
-                    a = !!((g[p + j] >> k) & 1);
-                    Q = z[X + Y * 64] != a;
+                    a = (g[p + j] >> k) & 1;
+                    Q = z[X + Y * 64] ^ a;
                     c.fillStyle = Q ? L : W;
                     c.fillRect(X, Y, 1, 1);
                     o ||= !Q && a;
