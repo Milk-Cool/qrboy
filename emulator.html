@@ -19,8 +19,9 @@
         b = [q("#a"), q("#b"), q("#l"), q("#r"), q("#u"), q("#d")], K = 0,
         B = q("body").style,
         s = [], p = 0, i = 0, t = 0, S = 0, a,
-        z = new Array(64).fill(0).map(_ => new Array(64).fill(false)), X, Y,
-        M, N, O, P, x, y;
+        Z = _ => new Array(64).fill(0).map(_ => new Array(64).fill(false)),
+        z = Z(), X, Y,
+        M, N, O, P, Q, x, y;
     b.forEach(x => x.style.fontSize = "200%");
     c.fillStyle = W;
     c.fillRect(0, 0, 128, 128);
@@ -40,6 +41,7 @@
         if(x == 16) {
             c.fillStyle = W;
             c.fillRect(0, 0, 128, 128);
+            z = Z();
         } if(x == 17)
             i = s.pop();
         if((x & 248) == 128)
@@ -93,15 +95,15 @@
             let o = false;
             for(let j = 0; j < (y & 63) + 1; j++)
                 for(let k = 0; k < 8; k++) {
-                    a = !!((g[p + j] >> k) & 1);
-                    c.fillStyle = a ? L : W;
                     X = r[(x & 15) >> 1] + k;
                     Y = r[((x & 1) << 2) | ((y & 192) >> 6)] + j;
+                    if(X > 63 || Y > 63) continue;
+                    a = !!((g[p + j] >> k) & 1);
+                    Q = z[X][Y] != a;
+                    c.fillStyle = Q ? L : W;
                     c.fillRect(X, Y, 1, 1);
-                    if(X < 64 && Y < 64) {
-                        o ||= z[X][Y] != a;
-                        z[X][Y] = a;
-                    }
+                    o ||= Q;
+                    z[X][Y] = a;
                 }
             r[7] = o ? 1 : 0;
         } if(x == 32 && (K >> O) & 1)
