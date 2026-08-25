@@ -1,0 +1,9 @@
+<canvas
+    style="position: fixed; top: 50vh; left: 50vw; translate: -50% -50%; width: min(100vw, 100vh)"
+    width="64" height="64"
+></canvas>
+<script>
+    let game = new Uint8Array("$PAD");
+    game.set(new Uint8Array(atob("$BASE64").split("").map(x => x.codePointAt(0))));
+    console.log(game);
+</script>
