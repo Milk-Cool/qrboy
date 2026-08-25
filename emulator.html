@@ -26,7 +26,6 @@
     c.fillRect(0, 0, 128, 128);
     q("table").setAttribute("style", "position:fixed;bottom:1em;right:1em");
     g.set(new Uint8Array(atob("$BASE64").split("").map(x => x.codePointAt(0))));
-    console.log(g);
     b.forEach((e, i) => {
         e.onpointerdown = _ => K |= 1 << i;
         e.onpointerup = _ => K &= ~(1 << i);
@@ -98,7 +97,6 @@
                     c.fillStyle = a ? L : W;
                     X = r[(x & 15) >> 1] + k;
                     Y = r[((x & 1) << 2) | ((y & 192) >> 6)] + j;
-                    console.log(X, Y, a);
                     c.fillRect(X, Y, 1, 1);
                     if(X < 64 && Y < 64) {
                         o ||= z[X][Y] != a;
