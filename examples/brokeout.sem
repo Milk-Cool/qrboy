@@ -1,0 +1,150 @@
+; INIT
+
+init:
+    andr R5 15 ; random start position
+    set R0 24 ; ball X
+    add R0 R5 ; add the start position
+    set R1 59 ; ball Y
+    set R2 20 ; paddle X
+    add R2 R5
+    set R3 60 ; paddle Y
+    set R4 0 ; ball direction
+
+    setp @paddle
+    draw R2 R3 0 ; draw paddle
+
+    setp @ball
+    draw R0 R1 0 ; draw ball
+
+    set R5 0 ; block X
+    set R6 3 ; block Y
+    setp @block
+
+initloop:
+    sneq R5 64 ; if we've reached the edge, go to the next row
+    call @initloopinc
+
+    sneq R6 13 ; if done, go to loop
+    jmp @loop
+    
+    draw R5 R6 0 ; draw block
+    add R5 8
+    jmp @initloop ; loop
+
+; MAIN CODE
+
+loop:
+    setp @paddle
+    draw R2 R3 0 ; erase paddle
+    sbnp 2 ; handle left key
+    sub R2 1
+    sbnp 3 ; handle right key
+    add R2 1
+    draw R2 R3 0 ; draw paddle again
+
+    setp @ball
+    draw R0 R1 0 ; erase ball
+
+    set R5 R4 ; set temporary register to R4 to avoid consecutive calls
+    sneq R5 0 ; handle up-right movement
+    call @moveupright
+    sneq R5 1 ; handle down-right movement
+    call @movedownright
+    sneq R5 2 ; handle down-left movement
+    call @movedownleft
+    sneq R5 3 ; handle up-left movement
+    call @moveupleft
+
+    draw R0 R1 0 ; draw ball again
+
+    sneq R7 1 ; if there's an overlap
+    call @overlap ; handle it!
+
+    jmp @loop ; loop
+
+gameover:
+    clr
+    set R0 28 ; center of screen for 8x8 sprite
+    setp @skull
+    draw R0 R0 6 ; X = Y
+    setb R0 ; wait for any input
+    clr
+    jmp @init ; reset the program; all registers are reinitialized later on
+
+; FUNCTIONS
+
+initloopinc:
+    set R5 0
+    add R6 2 ; advance to next row
+    ret
+
+moveupright:
+    add R0 1
+    sub R1 1
+    sneq R0 63 ; if X = 63
+    set R4 3 ; move up-left from now on
+    sneq R1 0 ; if Y = 0
+    set R4 1 ; move down-right from now on
+    ret
+movedownright:
+    add R0 1
+    add R1 1
+    sneq R0 63 ; if X = 63
+    set R4 2 ; move down-left from now on
+    sneq R1 63 ; if Y = 63
+    jmp @gameover ; go to the game over screen
+    ret
+movedownleft:
+    sub R0 1
+    add R1 1
+    sneq R0 0 ; if X = 0
+    set R4 1 ; move down-right from now on
+    sneq R1 63 ; if Y = 63
+    jmp @gameover ; go to the game over screen
+    ret
+moveupleft:
+    sub R0 1
+    sub R1 1
+    sneq R0 0 ; if X = 0
+    set R4 0 ; move up-right from now on
+    sneq R1 0 ; if Y = 0
+    set R4 2 ; move down-left from now on
+    ret
+
+overlap:
+    sneq R1 R3 ; if we're touching the paddle
+    jmp @overlappaddle ; handle it!
+    ; otherwise, handle the block overlap
+
+    set R5 0b11111000 ; temp value
+    set R6 R0
+    and R6 R5 ; round down to the nearest number divisible by 8
+    setp @block
+    draw R6 R1 0 ; destroy block
+
+    ret
+
+overlappaddle:
+    sneq R4 1 ; if going down-right
+    set R4 0 ; go up-right
+    sneq R4 2 ; or, if going down-left
+    set R4 3 ; go up-left
+
+    ret
+
+; SPRITES
+
+block:
+    dbr 0b01111110
+paddle:
+    dbr 0b11111111
+ball:
+    dbr 0b10000000
+skull:
+    dbr 0b01111100
+    dbr 0b11111110
+    dbr 0b10010010
+    dbr 0b10010010
+    dbr 0b11101110
+    dbr 0b01111100
+    dbr 0b01010100
