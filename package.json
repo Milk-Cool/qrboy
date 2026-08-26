@@ -15,7 +15,8 @@
   "type": "module",
   "main": "index.js",
   "bin": {
-    "qrboy-embed": "embed.ts"
+    "qrboy-embed": "embed.ts",
+    "qrboy-sembly": "sembly.ts"
   },
   "dependencies": {
     "html-minifier": "^4.0.0",
