@@ -1,0 +1,74 @@
+; INIT
+
+init:
+    set R1 32 ; screen width / 2
+    set R2 32 ; screen height / 2
+    set R3 0x3f ; screen bitmask
+
+; STAGES
+
+stage1:
+    setb R4 ; read a button input into R2
+
+    sneq R4 0 ; if A is pressed
+    jmp @stage2 ; proceed
+    sneq R4 255 ; or, if the line is as long as possible
+    jmp @stage2 ; also proceed
+
+    sneq R4 2 ; if left is pressed
+    sub R1 1 ; decrement X
+    sneq R4 3 ; if right is pressed
+    add R1 1 ; increment X
+    sneq R4 4 ; if up is pressed
+    sub R2 1 ; decrement Y
+    sneq R4 5 ; if down is pressed
+    add R2 1 ; increment Y
+
+    and R1 R3 ; ensure X and Y are within the bounds of the screen
+    and R2 R3
+
+    setp @pixel
+    draw R1 R2 0
+
+    set R0 R5 ; set temporary register to line length
+    setp0 @pattern ; set P to @pattern + temporary register
+    set R0 R4 ; set that register to the button ID
+    psav R0 ; save temporary register to memory
+    add R5 1 ; increment line length
+    jmp @stage1
+
+stage2:
+    set R0 R6
+    setp0 @pattern
+    plod R0 ; load value from memory to R0
+
+    sneq R0 2 ; if left was pressed
+    sub R1 1 ; decrement X
+    sneq R0 3 ; ...etc
+    add R1 1
+    sneq R0 4
+    sub R2 1
+    sneq R0 5
+    add R2 1
+
+    and R1 R3 ; ensure X and Y are within the bounds of the screen
+    and R2 R3
+
+    setp @pixel
+    draw R1 R2 0
+
+    add R6 1 ; increment index
+    sneq R6 R5 ; if we've reached the end of the line
+    set R6 0 ; reset the index
+    jmp @stage2
+
+; SPRITES
+
+pixel:
+    dbr 0b10000000
+
+; PATTERN
+
+pattern:
+    ; padding already saves enough space for us to use!
+    ; if it weren't for it though, we'd have to use something like `db0 255`
