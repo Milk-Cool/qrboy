@@ -1,0 +1,156 @@
+; INIT
+
+init:
+    clr
+
+    set R5 2 ; ship X
+    set R6 28 ; ship Y
+    setp @ship
+    draw R5 R6 7 ; draw the ship for the first time
+
+    andr R0 0x3f ; asteroid 1 Y
+    andr R1 0x3f ; asteroid 2 Y
+    andr R2 0x3f ; asteroid 3 Y
+    andr R3 0x3f ; asteroid 4 Y
+
+    set R4 15 ; asteroids X
+
+    call @draw_asteroids_once ; draw the asteroids for the first time
+
+; MAIN CODE
+
+loop:
+    setp @ship
+    draw R5 R6 7 ; erase the ship
+    sbnp 4 ; if up is pressed,
+    sub R6 2 ; move ship up
+    sbnp 5 ; if down is pressed,
+    add R6 2 ; move ship down
+    draw R5 R6 7 ; draw it again
+
+    call @draw_asteroids
+
+    jmp @loop ; loop
+
+game_over:
+    setp @ship
+    draw R5 R6 7 ; erase the ship
+
+    setp @explosion
+    draw R5 R6 7 ; draw the explosion instead
+
+    setb R7 ; block execution until a button is pressed
+    jmp @init ; reset
+
+; FUNCTIONS
+
+draw_asteroids:
+    call @draw_asteroids_once ; erase asteroids
+
+    sub R4 1 ; move asteroids to the left
+    call @norm_pos
+
+    sneq R4 0x3f ; if X = 63
+    andr R3 0x3f ; reset Y to random
+    sneq R4 0x2f ; adjust for next asteroid
+    andr R0 0x3f
+    sneq R4 0x1f
+    andr R1 0x3f
+    sneq R4 0x0f
+    andr R2 0x3f
+
+    call @draw_asteroids_once_with_check ; draw asteroids again, with collision
+
+    ret
+
+draw_asteroids_once:
+    setp @asteroid
+
+    add R4 16 ; shift position
+    call @norm_pos
+    draw R4 R0 7 ; draw asteroid 1
+
+    add R4 16
+    call @norm_pos
+    draw R4 R1 7 ; draw asteroid 2
+
+    add R4 16
+    call @norm_pos
+    draw R4 R2 7 ; draw asteroid 3
+
+    add R4 16
+    call @norm_pos
+    draw R4 R3 7 ; draw asteroid 4
+
+    ret
+
+draw_asteroids_once_with_check:
+    ; same as draw_asteroids_once but checks for collision
+    ; it doesn't do setp either though
+    ; may not be the most optimal way but who cares!
+
+    add R4 16
+    call @norm_pos
+    draw R4 R0 7
+    call @game_over_check
+
+    add R4 16
+    call @norm_pos
+    draw R4 R1 7
+    call @game_over_check
+
+    add R4 16
+    call @norm_pos
+    draw R4 R2 7
+    call @game_over_check
+
+    add R4 16
+    call @norm_pos
+    draw R4 R3 7
+    call @game_over_check
+
+    ret
+
+norm_pos:
+    set R7 0x3f
+    and R4 R7 ; make sure it's in frame
+
+    ret
+
+game_over_check:
+    sneq R7 1 ; if collision happened
+    jmp @game_over ; play the "game over" sequence
+
+    ret
+
+; SPRITES
+
+ship:
+    dbr 0b01111000
+    dbr 0b11100000
+    dbr 0b11110000
+    dbr 0b01111111
+    dbr 0b01111111
+    dbr 0b11110000
+    dbr 0b11100000
+    dbr 0b01111000
+
+asteroid:
+    dbr 0b01111110
+    dbr 0b11111011
+    dbr 0b11111101
+    dbr 0b11111111
+    dbr 0b11111111
+    dbr 0b10111111
+    dbr 0b11011111
+    dbr 0b01111110
+
+explosion:
+    dbr 0b01100110
+    dbr 0b10011001
+    dbr 0b10010001
+    dbr 0b01001010
+    dbr 0b01010010
+    dbr 0b10100001
+    dbr 0b10011001
+    dbr 0b01100110
