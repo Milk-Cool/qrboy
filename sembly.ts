@@ -202,6 +202,7 @@ for(const line of code) {
     });
     else if(instr === "db") out.push(...args.map(parseNumber));
     else if(instr === "dbr") out.push(...args.map(x => revBits(parseNumber(x))));
+    else if(instr === "db0") out.push(...new Array(parseNumber(args[0])).fill(0));
 }
 
 let buf = Buffer.alloc(0);
