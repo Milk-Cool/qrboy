@@ -23,7 +23,7 @@ const { positionals, values } = parseArgs({
         pad: {
             type: "string",
             short: "p",
-            default: "512"
+            default: "2048"
         },
         ln: {
             type: "boolean",
