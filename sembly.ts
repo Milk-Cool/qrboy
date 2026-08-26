@@ -34,6 +34,11 @@ const { positionals, values } = parseArgs({
             type: "boolean",
             short: "u",
             default: false
+        },
+        size: {
+            type: "boolean",
+            short: "s",
+            default: false
         }
     }
 });
@@ -227,6 +232,8 @@ if(!values.pad.match(/^\d+$/)) {
     console.error("--pad seems to be invalid, exiting!");
     process.exit(1);
 }
+
+if(values.size) process.stderr.write(`Program size is ${buf.length}B\n`);
 
 if(values.raw) {
     if(values.output === "-") process.stdout.write(buf);
